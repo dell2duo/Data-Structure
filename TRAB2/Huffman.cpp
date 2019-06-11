@@ -4,9 +4,9 @@
 using namespace std;
 
 HuffmanTree::HuffmanTree(const int freqs[]){
-    for(int i=0;i<256;i++){ //copiando as frequencias para o vector da classe
-        freq.push_back(freqs[i]);
-    }
+    // for(int i=0;i<256;i++){ //copiando as frequencias para o vector da classe
+    //     freq.push_back(freqs[i]);
+    // }
 }
 
 void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<char> &in) const{

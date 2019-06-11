@@ -14,7 +14,7 @@ public:
     void descomprimir(MyVec<char> &out, const MyVec<bool> &in) const;
 private:
     Node<int, char> *root; //primeiro argumento template = frequencia, segundo argumento template = caractere
-    MyVec<int> freq;
+    //MyVec<int> freq;
     MyPriorityQueue<char> roots;
     int treeSize;
 };
