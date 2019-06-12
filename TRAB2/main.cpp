@@ -44,8 +44,8 @@ int main(int argc, char *argv[]){
             if(freq[i] == 0) continue;
             cout << "chave: " << (char)i << "\nfrequencia: " << freq[i] << "\n";
         }
-        //cout << "\n";
-        //cerr << "saiu 2\n";
+
+        HuffmanTree arvore(freq);
     }
 
     return 0;

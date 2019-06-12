@@ -15,7 +15,7 @@ public:
 private:
     Node<int, char> *root; //primeiro argumento template = frequencia, segundo argumento template = caractere
     //MyVec<int> freq;
-    MyPriorityQueue<char> roots;
+    //MyPriorityQueue<Node<int, char>> roots;
     int treeSize;
 };
 

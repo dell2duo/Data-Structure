@@ -4,8 +4,21 @@
 using namespace std;
 
 HuffmanTree::HuffmanTree(const int freqs[]){
-    // for(int i=0;i<256;i++){ //copiando as frequencias para o vector da classe
-    //     freq.push_back(freqs[i]);
+    treeSize = 0;
+    MyPriorityQueue<Node<int, char>> fila;
+
+    for(int i=0;i<256;i++){
+        if(freqs[i] != 0) {
+            treeSize++;
+            Node<int, char> temp(freqs[i], (char)i);
+            fila.push(temp);
+            //vou ter que alterar as classes mypriority e myvec
+        }
+    }
+    cerr << "tamanho da árvore: " << treeSize << endl;
+
+    // for(int i=0;i<treeSize;i++){
+    //     Node<int, char> temp(freqs[i],);
     // }
 }
 
