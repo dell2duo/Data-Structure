@@ -196,8 +196,7 @@ template<class T2>
 std::ostream& operator<<(std::ostream &out, const MyVec<T2> &v) {
 	out << "Size: " << v.size() << "\n";
 	out << "Capacity: " << v.dataCapacity << "\n";
-	for(int i=0;i<v.size();i++) out << v.data[i] << " ";
-	out << "\n";
+	for(int i=0;i<v.size();i++) out << v.data[i];
 	return out;
 }
 

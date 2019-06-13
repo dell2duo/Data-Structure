@@ -39,11 +39,11 @@ int main(int argc, char *argv[]){
             it++;
         }
 
-        for(int i=0;i<256;i++){
-            //cerr << "entrou 2\n";
-            if(freq[i] == 0) continue;
-            cout << "chave: " << (char)i << "\nfrequencia: " << freq[i] << "\n";
-        }
+        // for(int i=0;i<256;i++){
+        //     //cerr << "entrou 2\n";
+        //     if(freq[i] == 0) continue;
+        //     cout << "chave: " << (char)i << "\nfrequencia: " << freq[i] << "\n";
+        // }
 
         HuffmanTree arvore(freq);
     }

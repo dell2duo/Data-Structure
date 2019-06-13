@@ -13,7 +13,8 @@ public:
     void comprimir(MyVec<bool> &out, const MyVec<char> &in) const;
     void descomprimir(MyVec<char> &out, const MyVec<bool> &in) const;
 private:
-    Node<int, char> *root; //primeiro argumento template = frequencia, segundo argumento template = caractere
+    void merge(MyPriorityQueue<Node<int>*> &);
+    Node<int> *root; //primeiro argumento template = frequencia, segundo argumento template = caractere
     //MyVec<int> freq;
     //MyPriorityQueue<Node<int, char>> roots;
     int treeSize;
