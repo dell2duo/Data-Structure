@@ -35,17 +35,15 @@ int main(int argc, char *argv[]){
             temp = (int)*it;
             if(temp < 0) break;
             freq[temp]++;
-            cout << temp << endl;
+            // cout << temp << endl;
             it++;
         }
 
-        // for(int i=0;i<256;i++){
-        //     //cerr << "entrou 2\n";
-        //     if(freq[i] == 0) continue;
-        //     cout << "chave: " << (char)i << "\nfrequencia: " << freq[i] << "\n";
-        // }
-
         HuffmanTree arvore(freq);
+
+        MyVec<bool> out;
+
+        arvore.comprimir(out, in);
     }
 
     return 0;
