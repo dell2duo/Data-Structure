@@ -7,9 +7,36 @@ void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<char> &in) const{
     //pseudo-código
     //'in' é vector com todos os caracteres do arquivo a ser compactado
     //'out' terá os caracteres em forma binária representada por booleanos
-    print();
-    //char aux = 'A';
-    //if(search(root, aux)) cout << aux << " está presente na árvore!\n"; 
+    // print();
+    MyVec<char>::iterator it;
+    it = in.begin();
+    // cout << "1" << endl;
+    while(it != in.end()){
+        // cout << "2" << endl;
+        if(search(root->left, *it)) out.push_back(false);
+        //cout << out.size();
+        else{
+            // cout << "3 " << *it << endl;
+            out.push_back(true);
+            Node<int> *temp = root;
+            temp = temp->right;
+            while(temp->left != NULL && temp->right != NULL){
+                // cout << "4" << endl;
+                if(search(temp->right, *it)){
+                    out.push_back(true);
+                    temp = temp->right;
+                }
+                else{
+                    out.push_back(false);
+                    temp = temp->left;
+                }
+            }
+        }
+        // cout << *it << endl;
+        it++;
+    }
+
+    // cout << out;
 }
 void HuffmanTree::descomprimir(MyVec<char> &out, const MyVec<bool> &in) const{
 
