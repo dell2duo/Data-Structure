@@ -7,13 +7,14 @@ void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<char> &in) const{
     //pseudo-código
     //'in' é vector com todos os caracteres do arquivo a ser compactado
     //'out' terá os caracteres em forma binária representada por booleanos
-    // print();
+    print();
     MyVec<char>::iterator it;
     it = in.begin();
     // cout << "1" << endl;
     while(it != in.end()){
+        if(*it == EOF) break; // não sei o motivo, porém estava aparecendo um 'EOF' no arquivo
         // cout << "2" << endl;
-        if(search(root->left, *it)) out.push_back(false);
+        if(root->left->character == *it) out.push_back(false);
         //cout << out.size();
         else{
             // cout << "3 " << *it << endl;
@@ -32,11 +33,14 @@ void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<char> &in) const{
                 }
             }
         }
-        // cout << *it << endl;
+        if(*it == '\n') cout << "/n" << endl;
+        else if((int)*it == -1) cout << "EOF" << endl;
+        else cout << *it << endl;
         it++;
     }
 
-    // cout << out;
+    cout << out << endl;
+    cout << in << endl;
 }
 void HuffmanTree::descomprimir(MyVec<char> &out, const MyVec<bool> &in) const{
 
@@ -58,7 +62,7 @@ HuffmanTree::HuffmanTree(const int freqs[]){
 
     while(queue.size() > 1){
         Node<int> *temp = merge(queue);
-        queue.push(temp);
+        queue.pushbottom(temp);
         // queue.print();
     }
 
@@ -66,6 +70,7 @@ HuffmanTree::HuffmanTree(const int freqs[]){
 }
 
 Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
+    // queue.print();
     Node<int> *temp1 = queue.bottom();
     queue.popbottom();
     // cout << "temp1\n" << *temp1 << endl;
@@ -80,24 +85,48 @@ Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
     ao novo nodo que será a raiz de 'temp1' e 'temp2' */
     
     Node<int> *temp3 = new Node<int>(temp1->freq+temp2->freq, '0');
-    if(queue.size() == 0){
-        temp3->right = temp2;
-        temp3->left = temp1;
-    }
-    else{
+    // if((queue.size() == 0) && (*temp2 > *temp1)){
+    //     cout << "entrou\n";
+    //     temp3->right = temp2;
+    //     temp3->left = temp1;
+    // }
+    // else if((queue.size() == 0) && (*temp1 > *temp2)){
+    //     temp3->right = temp2;
+    //     temp3->left = temp1;
+    // }
+    // else if(*temp1 > *temp2){
+    //     temp3->right = temp2;
+    //     temp3->left = temp1;
+    // }
+    // else{
+    //     temp3->right = temp1;
+    //     temp3->left = temp2;
+    // }
+    if(temp1->character == '0'){
         temp3->right = temp1;
         temp3->left = temp2;
     }
+    else{
+        temp3->right = temp2;
+        temp3->left = temp1;
+    }
 
+    // cout << "temp3\n" << *temp3 << endl;
     return temp3;
 }
 
+// bool HuffmanTree::search(Node<int> *object, char &elem) const{
+//     if(!object->left || !object->right) {cout << "ah";return false;}
+//     if(object->right->character == elem) return true;
+//     if(object->left->character == elem) return true;
+//     //search(object->left, elem); // não há necessidade, pois só há um elemento na esquerda
+//     return search(object->right, elem);
+// }
+
 bool HuffmanTree::search(Node<int> *object, char &elem) const{
-    if(!object->left || !object->right) return false;
-    if(object->left->character == elem) return true;
-    if(object->right->character == elem) return true;
-    //search(object->left, elem); // não há necessidade, pois só há um elemento na esquerda
-    search(object->right, elem);
+    if(!object) return false;
+    if(object->character == elem) return true;
+    return search(object->left, elem) || search(object->right, elem);
 }
 
 void HuffmanTree::destroy(Node<int> *object){
@@ -116,13 +145,16 @@ void HuffmanTree::print() const{
 	if(!root) return;
 	q.push(root);
 
+    int size = 0;
 	while(!q.empty()) {
+        size++;
 		Node<int> * p = q.front();
 		q.pop();
-        if(p->character == '\n') cout << "/n";
+        if(p->character == '\n') cout << "/n ";
+        else if(p->character == EOF) cout << "EOF ";
 		else cout << p->character << " ";
 		if(p->left) q.push(p->left);  
 		if(p->right) q.push(p->right);
 	}
-    cout << '\n';
+    cout << size << '\n';
 }

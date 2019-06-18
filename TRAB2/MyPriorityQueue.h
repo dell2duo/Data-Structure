@@ -9,6 +9,7 @@ template<class T>
 class MyPriorityQueue {
 public:
 	void push(const T&el);
+	void pushbottom(const T&el);
 	const T & top() const { return heap[ 0 ]; }
 	const T & bottom() const { return heap[ heap.size()-1 ]; }
 	void popbottom();
@@ -68,6 +69,13 @@ void MyPriorityQueue<T>::push(const T&elem) {
 }
 
 template<class T>
+void MyPriorityQueue<T>::pushbottom(const T&elem) {
+	//adicione o elemento no final do heap e use moveUp para restaurar as propriedades de heap
+	heap.push_back(elem);
+	//moveUp(heap.size()-1);
+}
+
+template<class T>
 void MyPriorityQueue<T>::pop() {
 	swap(heap[heap.size()-1],heap[0]); //pega o ultimo elemento do heap e coloca-o na primeira posicao
 	heap.resize(heap.size()-1); //reduz o tamanho do heap
@@ -78,7 +86,7 @@ template<class T>
 void MyPriorityQueue<T>::popbottom() {
 	//swap(heap[heap.size()-1],heap[0]); //pega o ultimo elemento do heap e coloca-o na primeira posicao
 	heap.resize(heap.size()-1); //reduz o tamanho do heap
-	moveDown(0); //restaura as propriedades de heap a partir da posicao 0
+	//moveDown(0); //restaura as propriedades de heap a partir da posicao 0
 }
 
 template<class T>
