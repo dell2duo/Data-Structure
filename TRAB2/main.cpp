@@ -53,29 +53,31 @@ int main(int argc, char *argv[]){
         no arquivo de saída*/
 
         ofstream output;
-        output.open(argv[3], ios::binary);
+        output.open(argv[3], ios::out);
         if(!output.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
-            cout << "-- error! Input file could not be opened --\n";
+            cout << "-- error! Output file could not be opened --\n";
             return 0;
         }
 
-        for(int i=0;i<256;i++){ /* vamos salvar as frequências no início do arquivo compactado */
-            output << freq[i];
-        }
+        // for(int i=0;i<256;i++){ /* vamos salvar as frequências no início do arquivo compactado */
+        //     //output << freq[i];
+        // }
+        output.write(reinterpret_cast<char*> (freq), sizeof(freq)*256);
 
         //MyVec<unsigned char> temp1;
         MyVec<bool>::iterator it2; /* iterador para o vector de bools 'out' */
         it2 = out.begin();
         while(it2 != out.end()){
-            unsigned char aux = char();
-            for(int i=0;i<8;i++){
+            int aux = 0;
+            for(int i=0;i<32;i++){
                 if(it2 == out.end()) break;
                 if(*it2) aux = (aux | (1<<i));
                 //else aux = (aux & (0<<i));
                 it2++;
             }
             //temp1.push_back(aux);
-            output << aux;
+            //output << aux;
+            output.write(reinterpret_cast<char*> (&aux), sizeof(aux));
         }
 
         // cout << out << endl;
@@ -91,7 +93,66 @@ int main(int argc, char *argv[]){
         // arvore.descomprimir(out2, out);
     }
 
-    else if(option == "d"){}
+    else if(option == "d"){
+        /*
+            1 - ler o arquivo fonte (argv[2]) pegando os primeiros 256 inteiros
+        que serão as frequências dos caracteres do arquivo original.
+            2 - construir um objeto HuffmanTree com as frequencias obtidas.
+            3 - chamar a função de descomprimir passando um vector de booleanos
+        com os bits do arquivo comprimido e o vector de char que receberá os
+        caracteres originais do arquivo.
+            4 - salvar os arquivos a partir do vector de char em um arquivo fornecido
+        (argv[3]).
+        */
+        ifstream input;
+        input.open(argv[2], ios::binary);/*abrir o arquivo como binário (formato em que foi salvo)*/
+        if(!input.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
+            cout << "-- error! Input file could not be opened --\n";
+            return 0;
+        }
+
+        int freq[256];
+        input.read(reinterpret_cast<char *> (freq), sizeof(int)*256); /*ler os primeiros 256 bytes que é a frequência*/
+        
+        HuffmanTree arvore(freq);
+
+        MyVec<bool> in;
+        MyVec<unsigned char> out;
+
+        while(!input.eof()){
+            int aux = 0;
+            input.read(reinterpret_cast<char*>(&aux), sizeof(aux));
+            //cout << input.tellg() << endl;
+            // in.push_back(temp);
+            //cout << aux;
+            for(int i=31;i>=0;i--){
+                if((aux & (1<<i)) != 0) in.push_back(true);
+                else in.push_back(false);
+            }
+        }
+        //cout << in << endl;
+
+        arvore.descomprimir(out, in);
+
+        //cout << out << endl;
+
+        ofstream output;
+        output.open(argv[3], ios::out);
+        if(!output.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
+            cout << "-- error! Output file could not be opened --\n";
+            return 0;
+        }
+
+        MyVec<unsigned char>::iterator it;
+        it = out.begin();
+
+        while(it != out.end()){
+            output << *it;
+            it++;
+        }
+
+
+    }
 
     return 0;
 }

@@ -10,7 +10,7 @@ void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) co
     MyVec<unsigned char>::iterator it;
     it = in.begin();
     while(it != in.end()){
-        if(*it == EOF) break; // não sei o motivo, porém estava aparecendo um 'EOF' no arquivo
+        //if(*it == -1) break; // não sei o motivo, porém estava aparecendo um 'EOF' no arquivo
         if(root->left->character == *it) out.push_back(false);
         else{
             out.push_back(true);
@@ -70,6 +70,7 @@ HuffmanTree::HuffmanTree(const int freqs[]){
     }
 
     root = queue.bottom();
+    print();
 }
 
 Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
@@ -129,7 +130,7 @@ void HuffmanTree::print() const{
 		Node<int> * p = q.front();
 		q.pop();
         if(p->character == '\n') cout << "/n ";
-        else if(p->character == EOF) cout << "EOF ";
+        //else if(p->character == -1) cout << "EOF ";
 		else cout << p->character << " ";
 		if(p->left) q.push(p->left);  
 		if(p->right) q.push(p->right);
