@@ -12,10 +12,10 @@ public:
     HuffmanTree(const HuffmanTree &);
     ~HuffmanTree();
 
-    void comprimir(MyVec<bool> &out, const MyVec<char> &in) const;
-    void descomprimir(MyVec<char> &out, const MyVec<bool> &in) const;
+    void comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) const;
+    void descomprimir(MyVec<unsigned char> &out, const MyVec<bool> &in) const;
 private:
-    bool search(Node<int> *, char &) const;
+    bool search(Node<int> *, unsigned char &) const;
     void destroy(Node<int>*);
     void print() const;
     Node<int> *merge(MyPriorityQueue<Node<int>*> &);

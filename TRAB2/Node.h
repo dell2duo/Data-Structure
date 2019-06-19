@@ -8,10 +8,10 @@ public:
 	friend std::ostream& operator<<(std::ostream &, const Node<T2> &);
 
 	Node(): freq(0), character('0'),left(NULL), right(NULL) {}
-	Node(const T &frequence, const char &character_) : freq(frequence), character(character_),left(NULL), right(NULL) {}
+	Node(const T &frequence, const unsigned char &character_) : freq(frequence), character(character_),left(NULL), right(NULL) {}
 	Node<T> *left, *right;
 	T freq;
-	char character;
+	unsigned char character;
 
 	bool operator>(const Node<T> &);
 };
