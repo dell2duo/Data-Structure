@@ -14,11 +14,18 @@ public:
 	unsigned char character;
 
 	bool operator>(const Node<T> &);
+	int operator*(const Node<T> &);
 };
 
 template<class T>
 bool Node<T>::operator>(const Node<T> &other){
 	return freq > other.freq;
+}
+
+template<class T>
+int Node<T>::operator*(const Node<T> &other){
+	cout << "entrou" << endl;
+	return other.freq;
 }
 
 template<class T2>

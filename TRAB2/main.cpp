@@ -30,9 +30,10 @@ int main(int argc, char *argv[]){
 
         while(!input.eof()) in.push_back((unsigned char)input.get()); /*copia os caracteres do arquivo fonte*/
         input.close(); /*não há mais necessidade de acessar o arquivo fonte*/
-        
         /*neste trecho de código iremos ler a frequência de cada caractere do arquivo fonte
         armazenados no vector 'in'*/
+        in.pop_back(); /* removemos o caractere de 'fim de arquivo' */
+
         MyVec<unsigned char>::iterator it; /* iterador para o vector 'in' */
         it = in.begin();
         int temp;
@@ -41,7 +42,6 @@ int main(int argc, char *argv[]){
             temp = (int)*it;
             if(temp < 0) break;
             freq[temp]++;
-            // cout << temp << endl;
             it++;
         }
 
@@ -53,44 +53,31 @@ int main(int argc, char *argv[]){
         no arquivo de saída*/
 
         ofstream output;
-        output.open(argv[3], ios::out);
+        output.open(argv[3], ios::binary);
         if(!output.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
             cout << "-- error! Output file could not be opened --\n";
             return 0;
         }
 
-        // for(int i=0;i<256;i++){ /* vamos salvar as frequências no início do arquivo compactado */
-        //     //output << freq[i];
-        // }
-        output.write(reinterpret_cast<char*> (freq), sizeof(freq)*256);
+        output.write(reinterpret_cast<char*>(freq), sizeof(freq));
 
-        //MyVec<unsigned char> temp1;
+        int n_bits = out.size();
+        output.write(reinterpret_cast<char*>(&n_bits), sizeof(n_bits));
+
         MyVec<bool>::iterator it2; /* iterador para o vector de bools 'out' */
         it2 = out.begin();
+
         while(it2 != out.end()){
-            int aux = 0;
-            for(int i=0;i<32;i++){
+            unsigned char aux = char();
+            for(int i=7;i>=0;i--){
                 if(it2 == out.end()) break;
-                if(*it2) aux = (aux | (1<<i));
-                //else aux = (aux & (0<<i));
+                if(*it2 == true) aux = (aux | (1<<i));
+                else aux = (aux & ~(1<<i));
                 it2++;
             }
-            //temp1.push_back(aux);
-            //output << aux;
             output.write(reinterpret_cast<char*> (&aux), sizeof(aux));
         }
-
-        // cout << out << endl;
-        // cout << "temp1:\n";
-        // for(int i=0;i<temp1.size();i++){
-        //     for(int j=0;j<8;j++)
-        //         if((temp1[i] & (1<<j)) != 0)
-        //             cout << "1";
-        //         else cout << "0";
-        // }
-        // cout << endl;
-        // MyVec<unsigned char> out2;
-        // arvore.descomprimir(out2, out);
+        output.close();
     }
 
     else if(option == "d"){
@@ -112,29 +99,31 @@ int main(int argc, char *argv[]){
         }
 
         int freq[256];
-        input.read(reinterpret_cast<char *> (freq), sizeof(int)*256); /*ler os primeiros 256 bytes que é a frequência*/
-        
+        input.read(reinterpret_cast<char*> (freq), sizeof(freq)); /*ler os primeiros 1024 bytes que é a frequência*/
+        int n_bits; //número total de bits válidos para a leitura.
+        input.read(reinterpret_cast<char*>(&n_bits), sizeof(n_bits));
+
         HuffmanTree arvore(freq);
 
         MyVec<bool> in;
         MyVec<unsigned char> out;
 
+        int limit = 0;
         while(!input.eof()){
-            int aux = 0;
+            unsigned char aux;
             input.read(reinterpret_cast<char*>(&aux), sizeof(aux));
-            //cout << input.tellg() << endl;
-            // in.push_back(temp);
-            //cout << aux;
-            for(int i=31;i>=0;i--){
+            for(int i=7;i>=0;i--){
+                if(limit == n_bits) break;
+                limit++;
                 if((aux & (1<<i)) != 0) in.push_back(true);
                 else in.push_back(false);
             }
+            if(limit == n_bits) break;
         }
-        //cout << in << endl;
+
+        input.close();
 
         arvore.descomprimir(out, in);
-
-        //cout << out << endl;
 
         ofstream output;
         output.open(argv[3], ios::out);
@@ -150,8 +139,7 @@ int main(int argc, char *argv[]){
             output << *it;
             it++;
         }
-
-
+        output.close();
     }
 
     return 0;

@@ -6,11 +6,11 @@ using namespace std;
 void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) const{
     //'in' é vector com todos os caracteres do arquivo a serem compactados
     //'out' terá os caracteres em forma binária representada por booleanos
-    print();
+    // print(); //REMOVER
     MyVec<unsigned char>::iterator it;
     it = in.begin();
     while(it != in.end()){
-        //if(*it == -1) break; // não sei o motivo, porém estava aparecendo um 'EOF' no arquivo
+        if(it == in.end()) cout << "in.end()\n";
         if(root->left->character == *it) out.push_back(false);
         else{
             out.push_back(true);
@@ -29,8 +29,6 @@ void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) co
         }
         it++;
     }
-    //cout << out << endl;
-    // cout << in << endl;
 }
 void HuffmanTree::descomprimir(MyVec<unsigned char> &out, const MyVec<bool> &in) const{
     MyVec<bool>::iterator it; it = in.begin();
@@ -45,8 +43,6 @@ void HuffmanTree::descomprimir(MyVec<unsigned char> &out, const MyVec<bool> &in)
         }
         out.push_back(temp->character);
     }
-
-    //cout << out << endl;
 }
 
 HuffmanTree::HuffmanTree(const int freqs[]){
@@ -60,17 +56,14 @@ HuffmanTree::HuffmanTree(const int freqs[]){
         }
     }
 
-    // cout << "fila antiga:\n";
-    // queue.print();
+    queue.print();
 
     while(queue.size() > 1){
         Node<int> *temp = merge(queue);
         queue.pushbottom(temp);
-        // queue.print();
     }
 
     root = queue.bottom();
-    print();
 }
 
 Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
@@ -130,7 +123,6 @@ void HuffmanTree::print() const{
 		Node<int> * p = q.front();
 		q.pop();
         if(p->character == '\n') cout << "/n ";
-        //else if(p->character == -1) cout << "EOF ";
 		else cout << p->character << " ";
 		if(p->left) q.push(p->left);  
 		if(p->right) q.push(p->right);

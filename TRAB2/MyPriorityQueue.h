@@ -52,7 +52,7 @@ template<class T>
 void MyPriorityQueue<T>::moveUp(int pos) { 
 	while(pos>0) {
 		int pai = (pos-1)/2; //pai da posicao i...
-		if(*heap[pos] > *heap[pai]) {
+		if(heap[pos] > heap[pai]) {
 			swap(heap[pos],heap[pai]);
 			pos = pai;
 		}
