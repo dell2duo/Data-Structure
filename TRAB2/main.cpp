@@ -52,8 +52,6 @@ int main(int argc, char *argv[]){
             return 0;
         }
 
-        for(int i=0;i<6;i++) cout << in[i];
-
         MyVec<unsigned char>::iterator it; /* iterador para o vector 'in' */
         it = in.begin();
         int temp;
