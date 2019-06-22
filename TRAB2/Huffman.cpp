@@ -6,24 +6,20 @@ using namespace std;
 void HuffmanTree::comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) const{
     //'in' é vector com todos os caracteres do arquivo a serem compactados
     //'out' terá os caracteres em forma binária representada por booleanos
-    // print(); //REMOVER
-    MyVec<unsigned char>::iterator it;
+    MyVec<unsigned char>::iterator it; //iterador de 'in'
     it = in.begin();
     while(it != in.end()){
-        if(it == in.end()) cout << "in.end()\n";
-        if(root->left->character == *it) out.push_back(false);
-        else{
-            out.push_back(true);
+        if(n_char == 1) out.push_back(true);
+        else {
             Node<int> *temp = root;
-            temp = temp->right;
             while(temp->left != NULL && temp->right != NULL){
-                if(search(temp->right, *it)){
-                    out.push_back(true);
-                    temp = temp->right;
-                }
-                else{
+                if(search(temp->left, *it)){
                     out.push_back(false);
                     temp = temp->left;
+                }
+                else{
+                    out.push_back(true);
+                    temp = temp->right;
                 }
             }
         }
@@ -35,46 +31,47 @@ void HuffmanTree::descomprimir(MyVec<unsigned char> &out, const MyVec<bool> &in)
 
     while(it != in.end()){
         Node<int> *temp = root;
-        while(temp->left && temp->right){
-            if(it == in.end()) break;
-            if(*it == false) temp = temp->left;
-            else temp = temp->right;
-            it++;
+        if(n_char == 1) {it++;}
+        else{
+            while(temp->left && temp->right){
+                if(it == in.end()) break;
+                if(*it == false) temp = temp->left;
+                else temp = temp->right;
+                it++;
+            }
         }
         out.push_back(temp->character);
     }
 }
 
 HuffmanTree::HuffmanTree(const int freqs[]){
+    n_char = 0;
     MyPriorityQueue<Node<int>*> queue;
     /* iremos agora criar os nodos com seus respectivos caracteres e frequencias
     e então fazer um 'push' para a fila de prioridade 'queue' */
     for(int i=0;i<256;i++){
         if(freqs[i] != 0) {
+            n_char++;
             Node<int> *temp = new Node<int>(freqs[i], (char)i);
             queue.push(temp);
         }
     }
 
-    queue.print();
-
     while(queue.size() > 1){
         Node<int> *temp = merge(queue);
-        queue.pushbottom(temp);
+        queue.push(temp);
     }
 
-    root = queue.bottom();
+    root = queue.top();
 }
 
 Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
     // queue.print();
-    Node<int> *temp1 = queue.bottom();
-    queue.popbottom();
-    // cout << "temp1\n" << *temp1 << endl;
+    Node<int> *temp1 = queue.top();
+    queue.pop();
 
-    Node<int> *temp2 = queue.bottom();
-    queue.popbottom();
-    // cout << "temp2\n" << *temp2 << endl;
+    Node<int> *temp2 = queue.top();
+    queue.pop();
 
     /* a fila por prioridade nos diz que o ultimo elemento será o
     menor elemento da fila, então podemos adicionar à esquerda o
@@ -90,8 +87,6 @@ Node<int> *HuffmanTree::merge(MyPriorityQueue<Node<int>*> &queue){
         temp3->right = temp2;
         temp3->left = temp1;
     }
-
-    // cout << "temp3\n" << *temp3 << endl;
     return temp3;
 }
 
@@ -112,20 +107,27 @@ HuffmanTree::~HuffmanTree(){
     destroy(root);
 }
 
-void HuffmanTree::print() const{
-    MyQueue<Node<int> *> q;
+void HuffmanTree::print() const{ //um nivel por vez..
+	MyQueue<Node<int> *> q;
+	MyQueue<Node<int> *> u;
 	if(!root) return;
-	q.push(root);
+	u.push(root);
 
-    int size = 0;
-	while(!q.empty()) {
-        size++;
-		Node<int> * p = q.front();
-		q.pop();
-        if(p->character == '\n') cout << "/n ";
-		else cout << p->character << " ";
-		if(p->left) q.push(p->left);  
-		if(p->right) q.push(p->right);
+	int nivel = 0;
+	while(!u.empty()) {
+		q = u;
+		u = MyQueue<Node<int> *>();
+
+		cout <<  "Nivel " << nivel++ << " : ";
+		while(!q.empty()) {
+			Node<int> * p = q.front();
+			q.pop();
+            if(p->character == '\n') cout << "/n ";
+			else cout << p->character << " ";
+			if(p->left) u.push(p->left);  
+			if(p->right) u.push(p->right);
+		}
+		cout << endl;
 	}
-    cout << size << '\n';
+	
 }

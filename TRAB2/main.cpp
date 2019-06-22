@@ -34,6 +34,26 @@ int main(int argc, char *argv[]){
         armazenados no vector 'in'*/
         in.pop_back(); /* removemos o caractere de 'fim de arquivo' */
 
+        if(in.size() == 0){ //cria arquivo vazio
+            ofstream output;
+            output.open(argv[3], ios::binary);
+            if(!output.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
+                cout << "-- error! Output file could not be opened --\n";
+                return 0;
+            }
+
+            int freq[256] = {0};
+            output.write(reinterpret_cast<char*>(freq), sizeof(freq));
+
+            int n_bits = 0;
+            output.write(reinterpret_cast<char*>(&n_bits), sizeof(n_bits));
+
+            output.close();
+            return 0;
+        }
+
+        for(int i=0;i<6;i++) cout << in[i];
+
         MyVec<unsigned char>::iterator it; /* iterador para o vector 'in' */
         it = in.begin();
         int temp;
@@ -102,6 +122,18 @@ int main(int argc, char *argv[]){
         input.read(reinterpret_cast<char*> (freq), sizeof(freq)); /*ler os primeiros 1024 bytes que é a frequência*/
         int n_bits; //número total de bits válidos para a leitura.
         input.read(reinterpret_cast<char*>(&n_bits), sizeof(n_bits));
+
+        if(n_bits == 0){ //caso do arquivo original vazio
+            ofstream output;
+            output.open(argv[3], ios::out);
+            if(!output.is_open()){ /* debugger para caso o arquivo não exista ou não seja aberto */
+                cout << "-- error! Output file could not be opened --\n";
+                return 0;
+            }
+
+            output.close();
+            return 0;
+        }
 
         HuffmanTree arvore(freq);
 

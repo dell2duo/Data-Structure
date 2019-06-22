@@ -15,6 +15,7 @@ public:
     void comprimir(MyVec<bool> &out, const MyVec<unsigned char> &in) const;
     void descomprimir(MyVec<unsigned char> &out, const MyVec<bool> &in) const;
 private:
+    int n_char;
     bool search(Node<int> *, unsigned char &) const;
     void destroy(Node<int>*);
     void print() const;
