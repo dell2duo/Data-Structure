@@ -4,7 +4,7 @@
 
 //tamanho (numero de linhas) da tabela hash... (numero pequeno para facilitar a visualizacao)
 //esse e' o tamanho padrao das nossas tabelas (idealmente deveriamos usar valores maiores do que esse)
-const int DEFAULT_TABLE_SIZE = 1000;
+const int DEFAULT_TABLE_SIZE = 10;
 
 #include <algorithm> //contem a classe pair...
 
@@ -26,6 +26,7 @@ public:
 	void imprime() ; //usada para visualizar o conteudo da tabela...
 	void imprimeTamanhoBaldes() const; //imprime o numero de elementos em cada balde do hashmap
 
+	void reHash(const int &);
 private:
 	MyVec<MyList2<std::pair<KEY,VALUE> > > table;
 	int numElems;
@@ -112,6 +113,22 @@ VALUE &MyHashMap<KEY,VALUE,HASH>::getValue(const KEY &k)  {
 	//o usuario da classe deveria testar antes se a chave se encontra na tabela
 	//uma solucao melhor consiste em retornar um iterador (nesse caso, se a chave nao se encontrar retornariamos um iterador para end())
 	//mas isso foge do escopo desta aula... (onde estamos focando em uma implementacao simples)
+}
+
+template <class KEY, class VALUE, class HASH>
+void MyHashMap<KEY,VALUE,HASH>::reHash(const int &newSize){
+	MyVec<MyList2<std::pair<KEY, VALUE>>> oldBucket = table;
+	int oldSize = oldBucket.size();
+
+	table = MyVec<MyList2<std::pair<KEY, VALUE>>>(newSize);
+	numElems = 0;
+	tableSize = newSize;
+
+	for(int i=0;i<oldSize;i++){
+		for(typename MyList2<std::pair<KEY,VALUE> >::iterator it = oldBucket[i].begin();it!=oldBucket[i].end();it++){
+			set((*it).first, (*it).second);
+		}
+	}
 }
 
 #endif
